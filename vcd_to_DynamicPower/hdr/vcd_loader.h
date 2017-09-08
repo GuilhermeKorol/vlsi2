@@ -9,6 +9,8 @@
 
 using namespace std;
 
+// TODO: TRATAR SUB-SINAIS, OU SEJA SINAIS ALEM DO TOP
+
 // enum vcd_types {event, integer, parameter, real, reg, supply0,
 //                 supply1, tri, triand, trior, trireg, tri0,
 //                 tri1, wand, wire, wor};
@@ -19,6 +21,8 @@ struct element{
   vcd_types          type;
   int                width;
   double             total_sw;
+  int                sim_time;
+  float              psw;
   vector<element>    sub_elements;
 };
 
@@ -30,9 +34,16 @@ struct find_id : unary_function<element, bool> {
   }
 };
 
+// struct max_sw {
+//   bool operator() (element const &e,element const &f) {
+//     return e.total_sw < f.total_sw;
+//   }
+// };
+
 class Vcd_loader {
 public:
   Vcd_loader(string fname, element* e);
+  void load();
   ~Vcd_loader();
 
   static const int MAX_CHARS_PER_LINE = 128;    // Pessimistic guess of line size
@@ -42,6 +53,4 @@ public:
 private:
   ifstream vcd_file;
   element* top;
-
-  void allocate();
 };
