@@ -5,6 +5,10 @@
 #include <algorithm>
 #include "vcd_loader.h"
 
+#define VDD  1.2  // V
+#define CL   50   // [pF]
+#define FREQ 300   // [MHz]
+
 class Psw {
 public:
   Psw(element* e);

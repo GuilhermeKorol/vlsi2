@@ -14,10 +14,26 @@ Psw::Psw(element* e) : top(e) {
 
 void Psw::calculate() {
   find_max_sw();
-  sim_time = top->sim_time;   // Top gives the total simulation time
-  cout << "Sim time: " << sim_time << endl;
-  cout << "Max SW: " << max_sw << endl;
+  sim_time = top->sim_time;            // Top gives is the total simulation time
+  cout << "Simulation time: " << sim_time << endl;
+  cout << "Max number of SW: " << max_sw << endl;
+  // With the maximum number of transistions, we can estimate Esw
+  // Esw(x) = x.total_sw / max_sw
 
+  // Walk through all elements calculating their Dynamic Energy
+  for(vector<element>::iterator it = top->sub_elements.begin(); it != top->sub_elements.end(); it++) {
+    if(it->sub_elements.empty()) {
+      float esw = it->total_sw / max_sw;
+      it->psw = (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+      top->psw += it->psw;
+    } else {
+      for(vector<element>::iterator it_ = it->sub_elements.begin(); it_ != it->sub_elements.end(); it_++) {
+        float esw = it_->total_sw / max_sw;
+        it_->psw = (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+        it->psw += it_->psw;
+      }
+    }
+  }
 }
 
 void Psw::find_max_sw() {

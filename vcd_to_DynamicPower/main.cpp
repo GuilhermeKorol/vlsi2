@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "hdr/vcd_loader.h"
 #include "hdr/dynamic_power.h"
 
@@ -13,7 +14,9 @@ int main(int argc, char *argv[]) {
   power->calculate();
 
   for(vector<element>::iterator it = top.sub_elements.begin() ; it != top.sub_elements.end(); it++) {
-    cout << "Name: " << it->id_name.second << " ID: " << it->id_name.first << " SW Activity: " << it->total_sw << endl;
+    cout << "Name: " << setw(20) << left << it->id_name.second << " ID: " << setw(3) << left <<
+      it->id_name.first << " PSW: " << setw(11) << left << it->psw << " W" << endl;
   }
+  cout << endl << "Top module " << "\e[1m" << top.id_name.second << "\e[0m" << " total PSW: " << top.psw << " W" << endl;
 
 }
