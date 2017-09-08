@@ -20,6 +20,7 @@ void Vcd_loader::allocate() {
 
     // Array to store tokens from a line
     const char* token[MAX_TOKENS_PER_LINE] = {};
+    static bool dumpvars = false;
 
     token[0] = strtok(buf, DELIMITER);  // This is the firs token
     if (token[0]) {
@@ -28,33 +29,40 @@ void Vcd_loader::allocate() {
         if (!token[n]) break; // No more tokens
       }
     }
-    // Now look for signals, modules, etc. in the tokens
+    // Now look for signals, modules, transitions, etc. in the tokens
     for (int i = 0; i < n; i++) {
       if (strcmp("module",token[i]) == 0) {
-        top->id_name.first = 0; // Module has no ID
+        // Top Module
+        top->id_name.first = "";
         top->id_name.second = token[i+1];
         top->type = MODULE;
         top->width = 0;
         top->total_sw = 0;
-        cout << "Top Module: " << top->id_name.second << endl;
-
       }
       if (strcmp("$var",token[i]) == 0 && strcmp("wire",token[i+1]) == 0) {
+        // Wires
         element temp;
-        temp.id_name.first = token[i+3][0];
+        temp.id_name.first = token[i+3];
         temp.id_name.second = token[i+4];
         temp.type = WIRE;
         temp.width = 1; // TODO: Deal with buses...
         temp.total_sw = 0;
         top->sub_elements.push_back(temp);
       }
+      if (strcmp("$dumpvars",token[i]) == 0) {
+        // Init values on following lines
+        dumpvars = true;
+      } else if (dumpvars == true && (strcmp("$end",token[i]) == 0)) {
+        // Init values ended
+        dumpvars = false;
+      } else if (dumpvars == true) {
+        // Everything between $dumpvars and $end is <value><id>
+        char* temp_str = (char*)token[i]+1;
+        vector<element>::iterator it = find_if(top->sub_elements.begin(), top->sub_elements.end(), find_id(temp_str));
+        it->total_sw++;
+        cout << "Wire: " << it->id_name.second << " SW: " << it->total_sw << endl;
+      }
     }
-    // if (strcmp("$scope",token[0]) == 0) {
-    //   cout << "Top Module:" << token[2] << endl;
-    // }
-    // if (strcmp("$var",token[0]) == 0 && strcmp("wire",token[1]) == 0) {
-    //   cout << "Wire:" << token[4] << endl;
-    // }
   }
 }
 

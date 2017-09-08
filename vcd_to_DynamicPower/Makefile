@@ -1,5 +1,5 @@
-CC		  = g++
-CFLAGS  = -g -Wall -I./hdr/
+CC = g++
+CFLAGS = -g -Wall -I./hdr/
 LDFLAGS = -lm
 
 src = $(wildcard *.cpp) \

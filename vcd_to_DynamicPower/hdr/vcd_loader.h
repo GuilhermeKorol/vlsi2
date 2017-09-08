@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -14,11 +15,19 @@ using namespace std;
 enum vcd_types {MODULE, WIRE};    // Using only both for now
 
 struct element{
-  pair<char, string> id_name;
+  pair<string, string> id_name;
   vcd_types          type;
   int                width;
   double             total_sw;
   vector<element>    sub_elements;
+};
+
+struct find_id : unary_function<element, bool> {
+  char* id_name;
+  find_id(char* id):id_name(id) { }
+  int operator()(element const &e) const {
+    return !(strcmp(e.id_name.first.c_str(),id_name));
+  }
 };
 
 class Vcd_loader {
