@@ -24,6 +24,7 @@ struct element{
   int                sim_time;
   float              psw;
   string             parent_module;
+  int                total_signals;
   vector<element>    sub_elements;
 };
 

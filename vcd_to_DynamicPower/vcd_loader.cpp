@@ -48,6 +48,7 @@ void Vcd_loader::load() {
         top->total_sw = 0;
         top->sim_time = 0;
         top->psw = 0;
+        top->total_signals = 0;
         top->parent_module = "";
         top->type = TOP;
         is_top = false;
@@ -58,6 +59,7 @@ void Vcd_loader::load() {
         temp_parent.total_sw = 0;
         temp_parent.sim_time = 0;
         temp_parent.psw = 0;
+        temp_parent.total_signals = 0;
         temp_parent.parent_module = top->id_name.second;
         temp_parent.type = MODULE;
         top->sub_elements.push_back(temp_parent);
@@ -78,8 +80,10 @@ void Vcd_loader::load() {
         temp.total_sw = 0;
         temp.sim_time = 0;
         temp.psw = 0;
+        temp.total_signals = 0;
         temp.parent_module = top->id_name.second;
         top->sub_elements.push_back(temp);
+        top->total_signals++;
       } else if (strcmp("$var",token[i]) == 0 && strcmp("wire",token[i+1]) == 0) {
         element temp;
         temp.id_name.first = token[i+3];
@@ -92,8 +96,10 @@ void Vcd_loader::load() {
         temp.total_sw = 0;
         temp.sim_time = 0;
         temp.psw = 0;
+        temp.total_signals = 0;
         temp.parent_module = top->sub_elements.back().id_name.second;
         top->sub_elements.back().sub_elements.push_back(temp);
+        top->sub_elements.back().total_signals++;
       }
 
       // Load init values (dumpvars)

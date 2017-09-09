@@ -35,15 +35,17 @@ int main(int argc, char *argv[]) {
   power->calculate();
 
   // NOTE: Signals that appear in more than one module will only be counted once
-  // during dynamic energy calculations. However they will appear under all
+  // during dynamic energy calculations. However, they will appear under all
   // modules which instantiate them. Eg. clock and reset signal.
 
-  cout << endl << "Top module " << BOLD_ON << top.id_name.second << BOLD_OFF << " :" << endl;
+  cout << endl << "Top module " << BOLD_ON << top.id_name.second << BOLD_OFF <<
+    " Total of " << BOLD_ON << top.total_signals << BOLD_OFF << " signals" << " :" << endl;
   for(vector<element>::iterator it = top.sub_elements.begin() ; it != top.sub_elements.end(); it++) {
     cout << "|__ Name: " << setw(20) << left << it->id_name.second << setw(8) << left << "From module: " << it->parent_module <<
       " ID: " << setw(3) << left << it->id_name.first << " PSW: " << setw(11) << left << it->psw << " W" << endl;
       if (!it->sub_elements.empty()) {
-        cout << " |__ Sub-module " << BOLD_ON << it->id_name.second << BOLD_OFF << " :" << endl;
+        cout << " |__ Sub-module " << BOLD_ON << it->id_name.second << BOLD_OFF <<
+          " Total of " << BOLD_ON << it->total_signals << BOLD_OFF << " signals" <<" :" << endl;
         for (vector<element>::iterator it_ = it->sub_elements.begin() ; it_ != it->sub_elements.end(); it_++) {
           cout << " |__ Name: " << setw(20) << left << it_->id_name.second << setw(8) << left << "From module: " << it_->parent_module <<
             " ID: " << setw(3) << left << it_->id_name.first << " PSW: " << setw(11) << left << it_->psw << " W" << endl;
