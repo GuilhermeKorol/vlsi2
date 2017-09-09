@@ -37,6 +37,8 @@ void Vcd_loader::load() {
     }
     // Now look for signals, modules, transitions, etc. in the tokens
     for (int i = 0; i < n; i++) {
+      char* temp_str = (char*)token[i]; // Help when need to change token pointer
+
       // Load top module
       if (strcmp("module",token[i]) == 0 && is_top) {
         // Top Module or a sub-module
@@ -68,6 +70,9 @@ void Vcd_loader::load() {
         element temp;
         temp.id_name.first = token[i+3];
         temp.id_name.second = token[i+4];
+        if (token[i+5][0] == '[') {
+          temp.id_name.second.append(token[i+5]);
+        }
         temp.type = WIRE;
         temp.width = 1; // TODO: Deal with buses...
         temp.total_sw = 0;
@@ -79,8 +84,11 @@ void Vcd_loader::load() {
         element temp;
         temp.id_name.first = token[i+3];
         temp.id_name.second = token[i+4];
+        if (token[i+5][0] == '[') {
+          temp.id_name.second.append(token[i+5]);
+        }
         temp.type = WIRE;
-        temp.width = 1; // TODO: Deal with buses...
+        temp.width = 1;
         temp.total_sw = 0;
         temp.sim_time = 0;
         temp.psw = 0;
@@ -88,7 +96,6 @@ void Vcd_loader::load() {
         top->sub_elements.back().sub_elements.push_back(temp);
       }
 
-      char* temp_str = (char*)token[i]; // Help when need to change token pointer
       // Load init values (dumpvars)
       if (strcmp("$dumpvars",token[i]) == 0) {
         // Init values on following lines
