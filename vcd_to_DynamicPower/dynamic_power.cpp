@@ -5,12 +5,8 @@ bool cmp(const element& e, const element& f)
   return e.total_sw < f.total_sw;
 }
 
-Psw::Psw(element* e) : top(e) {
-  // if (top->sim_time > 0 && !top->sub_elements.empty()) {
-  // } else {
-  //   cout << "Top module not valid!" << endl;
-  // }
-}
+Psw::Psw(element* e, float f/*= VDD*/, float v/*= VDD*/, float c/*= CL*/) :
+        top(e), f(f), v(v), c(c) { }
 
 void Psw::calculate() {
   find_max_sw();
@@ -36,14 +32,14 @@ void Psw::calculate() {
       float temp_psw = 0;
       for(vector<element>::iterator it_ = it->sub_elements.begin(); it_ != it->sub_elements.end(); it_++) {
         float esw = it_->total_sw / max_sw;
-        it_->psw += (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+        it_->psw += (0.5*(v*v)) * (f*1000000) * (c*0.000000000001) * esw;
         it_->psw += it_->psw;
         temp_psw += it_->psw;
       }
       it->psw += temp_psw;
      }
      float esw = it->total_sw / max_sw;
-     it->psw += (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+     it->psw += (0.5*(v*v)) * (f*1000000) * (c*0.000000000001) * esw;
      top->psw += it->psw;
     }
 }

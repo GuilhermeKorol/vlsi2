@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <string>
 #include "hdr/vcd_loader.h"
 #include "hdr/dynamic_power.h"
 
@@ -10,8 +11,22 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
   element top;
-  Vcd_loader * loader = new Vcd_loader("vcd_files/pif2wb_dump.vcd", &top);
-  Psw * power = new Psw(&top);
+  float freq = 0;
+  float vdd  = 0;
+  float cl   = 0;
+
+  if (argc < 3) {
+    // ./psw vcd_files/pif2wb_dump.vcd 300 1.2 100
+    cout << "Usage: psw <vcd_file_name> <freq in MHz> <vdd> <load capacitance in pF>" << endl;
+    return 1;
+  }
+  freq = strtof(argv[2], NULL);
+  vdd = strtof(argv[3], NULL);
+  cl = strtof(argv[4], NULL);
+
+  cout << freq << " " << vdd << " " << cl << " " << endl;
+  Vcd_loader * loader = new Vcd_loader(argv[1], &top);
+  Psw * power = new Psw(&top, freq, vdd, cl);
 
   cout << endl << BOLD_ON << "--> VCD FILE PARSER <--" << BOLD_OFF << endl;
   cout << "Authors: Guilherme Korol & Matheus Storck" << endl << endl;
@@ -38,4 +53,5 @@ int main(int argc, char *argv[]) {
 
   cout << endl << "Top module " << BOLD_ON << top.id_name.second << BOLD_OFF << " total PSW: " << top.psw << " W" << endl;
   cout << endl;
+  return 0;
 }

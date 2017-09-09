@@ -5,19 +5,22 @@
 #include <algorithm>
 #include "vcd_loader.h"
 
-#define VDD  1.2  // V
+#define FREQ 300  // [MHz]
+#define VDD  1.2  // [V]
 #define CL   50   // [pF]
-#define FREQ 300   // [MHz]
 
 class Psw {
 public:
-  Psw(element* e);
+  Psw(element* e, float f = VDD, float v = VDD, float c = CL);
   void calculate();
   ~Psw();
 private:
   element* top;
   int max_sw;
   int sim_time;
+  float f;
+  float v;
+  float c;
 
   void find_max_sw();
 };
