@@ -14,8 +14,14 @@ int main(int argc, char *argv[]) {
   power->calculate();
 
   for(vector<element>::iterator it = top.sub_elements.begin() ; it != top.sub_elements.end(); it++) {
-    cout << "Name: " << setw(20) << left << it->id_name.second << " ID: " << setw(3) << left <<
-      it->id_name.first << " PSW: " << setw(11) << left << it->psw << " W" << endl;
+    cout << "Name: " << setw(20) << left << it->id_name.second << setw(8) << left << "Parent: " << it->parent_module <<
+      " ID: " << setw(3) << left << it->id_name.first << " PSW: " << setw(11) << left << it->psw << " W" << endl;
+      if (!it->sub_elements.empty()) {
+        for (vector<element>::iterator it_ = it->sub_elements.begin() ; it_ != it->sub_elements.end(); it_++) {
+          cout << "Name: " << setw(20) << left << it_->id_name.second << setw(8) << left << "Parent: " << it_->parent_module <<
+            " ID: " << setw(3) << left << it_->id_name.first << " PSW: " << setw(11) << left << it_->psw << " W" << endl;
+        }
+      }
   }
   cout << endl << "Top module " << "\e[1m" << top.id_name.second << "\e[0m" << " total PSW: " << top.psw << " W" << endl;
 

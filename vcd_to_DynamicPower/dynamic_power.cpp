@@ -6,10 +6,10 @@ bool cmp(const element& e, const element& f)
 }
 
 Psw::Psw(element* e) : top(e) {
-  if (top->sim_time > 0 && !top->sub_elements.empty()) {
-  } else {
-    cout << "Top module not valid!" << endl;
-  }
+  // if (top->sim_time > 0 && !top->sub_elements.empty()) {
+  // } else {
+  //   cout << "Top module not valid!" << endl;
+  // }
 }
 
 void Psw::calculate() {
@@ -22,18 +22,30 @@ void Psw::calculate() {
 
   // Walk through all elements calculating their Dynamic Energy
   for(vector<element>::iterator it = top->sub_elements.begin(); it != top->sub_elements.end(); it++) {
-    if(it->sub_elements.empty()) {
-      float esw = it->total_sw / max_sw;
-      it->psw = (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
-      top->psw += it->psw;
-    } else {
+    // if(it->sub_elements.empty()) {
+    //   float esw = it->total_sw / max_sw;
+    //   it->psw = (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+    //   top->psw += it->psw;
+    // } else {
+    //   for(vector<element>::iterator it_ = it->sub_elements.begin(); it_ != it->sub_elements.end(); it_++) {
+    //     float esw = it_->total_sw / max_sw;
+    //     it_->psw = (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+    //     it->psw += it_->psw;
+    //   }
+    if (!it->sub_elements.empty()) {
+      float temp_psw = 0;
       for(vector<element>::iterator it_ = it->sub_elements.begin(); it_ != it->sub_elements.end(); it_++) {
         float esw = it_->total_sw / max_sw;
-        it_->psw = (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
-        it->psw += it_->psw;
+        it_->psw += (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+        it_->psw += it_->psw;
+        temp_psw += it_->psw;
       }
+      it->psw += temp_psw;
+     }
+     float esw = it->total_sw / max_sw;
+     it->psw += (0.5*(VDD*VDD)) * (FREQ*1000000) * (CL*0.000000000001) * esw;
+     top->psw += it->psw;
     }
-  }
 }
 
 void Psw::find_max_sw() {

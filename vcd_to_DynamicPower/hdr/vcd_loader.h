@@ -14,7 +14,7 @@ using namespace std;
 // enum vcd_types {event, integer, parameter, real, reg, supply0,
 //                 supply1, tri, triand, trior, trireg, tri0,
 //                 tri1, wand, wire, wor};
-enum vcd_types {MODULE, WIRE};    // Using only both for now
+enum vcd_types {TOP, MODULE, WIRE};    // Using only both for now
 
 struct element{
   pair<string, string> id_name;
@@ -23,6 +23,7 @@ struct element{
   double             total_sw;
   int                sim_time;
   float              psw;
+  string             parent_module;
   vector<element>    sub_elements;
 };
 
