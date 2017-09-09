@@ -40,12 +40,12 @@ int main(int argc, char *argv[]) {
 
   cout << endl << "Top module " << BOLD_ON << top.id_name.second << BOLD_OFF << " :" << endl;
   for(vector<element>::iterator it = top.sub_elements.begin() ; it != top.sub_elements.end(); it++) {
-    cout << "|_ Name: " << setw(20) << left << it->id_name.second << setw(8) << left << "From module: " << it->parent_module <<
+    cout << "|__ Name: " << setw(20) << left << it->id_name.second << setw(8) << left << "From module: " << it->parent_module <<
       " ID: " << setw(3) << left << it->id_name.first << " PSW: " << setw(11) << left << it->psw << " W" << endl;
       if (!it->sub_elements.empty()) {
-        cout << "|_ Sub-module " << BOLD_ON << it->id_name.second << BOLD_OFF << " :" << endl;
+        cout << " |__ Sub-module " << BOLD_ON << it->id_name.second << BOLD_OFF << " :" << endl;
         for (vector<element>::iterator it_ = it->sub_elements.begin() ; it_ != it->sub_elements.end(); it_++) {
-          cout << "|__ Name: " << setw(20) << left << it_->id_name.second << setw(8) << left << "From module: " << it_->parent_module <<
+          cout << " |__ Name: " << setw(20) << left << it_->id_name.second << setw(8) << left << "From module: " << it_->parent_module <<
             " ID: " << setw(3) << left << it_->id_name.first << " PSW: " << setw(11) << left << it_->psw << " W" << endl;
         }
       }
